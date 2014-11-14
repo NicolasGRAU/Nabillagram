@@ -1,5 +1,6 @@
 package com.nabillgram.app;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -17,6 +19,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button intentCamera = (Button)findViewById(R.id.intentCameraButton);
+        intentCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, IntentCameraActivity.class);
+                intent.putExtra("text", "test");
+                startActivity(intent);
+            }
+        });
     }
 
 
