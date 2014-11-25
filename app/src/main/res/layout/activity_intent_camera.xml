@@ -4,14 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.arema.app.IntentCameraActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame"
+    android:background="#000000">
     <Button
         android:id="@+id/intentCameraCapture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/action_intent_camera"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff"
+        android:background="#9a0b77" />
     <ImageView
         android:id="@+id/intentCameraPreview"
         android:layout_width="fill_parent"
