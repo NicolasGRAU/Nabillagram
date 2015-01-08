@@ -14,17 +14,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends ActionBarActivity {
+public class IntentActivity extends ActionBarActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     private File file;
@@ -40,18 +38,13 @@ public class MainActivity extends ActionBarActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        setContentView(R.layout.activity_intent_camera);
-        getIntent().getStringExtra("test");
-        Button btn = (Button) findViewById(R.id.intentCameraCapture);
-        btn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
+
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 file = getOutputMediaFile(MEDIA_TYPE_IMAGE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                 startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-            }
-        });
+
+
     }
 
     private static File getOutputMediaFile(int type){
@@ -98,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
                         int bWidth = preview.getHeight();
 
                         MediaStore.Images.Media.insertImage(getContentResolver(), myBitmap, "PhotoTest", "taken with intent camera");
-                        MediaScannerConnection.scanFile(MainActivity.this, new String[]{filepath}, null, null);
+                        MediaScannerConnection.scanFile(IntentActivity.this, new String[]{filepath}, null, null);
                         final Bitmap scaled = Bitmap.createScaledBitmap(myBitmap,bWidth,bHeight,false);
 
                         runOnUiThread(new Runnable() {
