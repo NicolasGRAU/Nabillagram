@@ -1,17 +1,8 @@
 package com.nabillgram.app;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends ActionBarActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -41,83 +30,39 @@ public class MainActivity extends ActionBarActivity {
 
 
         setContentView(R.layout.activity_intent_camera);
-        getIntent().getStringExtra("test");
+
+        Button pivoter = (Button) findViewById(R.id.rotation);
         Button btn = (Button) findViewById(R.id.intentCameraCapture);
+
+        ImageView background = (ImageView) findViewById(R.id.intentCameraPreview);
+        ImageView filtre_1 = (ImageView) findViewById(R.id.filtre_1);
+        ImageView filtre_2 = (ImageView) findViewById(R.id.filtre_2);
+        ImageView filtre_3 = (ImageView) findViewById(R.id.filtre_3);
+        ImageView filtre_4 = (ImageView) findViewById(R.id.filtre_4);
+        ImageView filtre_5 = (ImageView) findViewById(R.id.filtre_5);
+
+        pivoter.setVisibility(ImageView.INVISIBLE);
+        btn.setVisibility(ImageView.VISIBLE);
+
+        background.setVisibility(ImageView.VISIBLE);
+        filtre_1.setVisibility(ImageView.INVISIBLE);
+        filtre_2.setVisibility(ImageView.INVISIBLE);
+        filtre_3.setVisibility(ImageView.INVISIBLE);
+        filtre_4.setVisibility(ImageView.INVISIBLE);
+        filtre_5.setVisibility(ImageView.INVISIBLE);
+
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                file = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+                Intent intent = new Intent(MainActivity.this, IntentActivity.class);
+                startActivity(intent);
+
+
             }
         });
     }
 
-    private static File getOutputMediaFile(int type){
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"PhotoTest");
-        // create storage directory if not exist
-        if(!mediaStorageDir.exists()){
-            if(!mediaStorageDir.mkdirs()){
-                Log.d("PhotoTest","Failed to create directory");
-                return null;
-            }
-        }
-        // generate file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-
-        if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-        }else if (type == MEDIA_TYPE_VIDEO){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
-        }  else {
-            return null;
-        }
-
-        Log.v("PhotoTest", "storing at "+mediaFile.getPath());
-        return mediaFile;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
-            if(resultCode == RESULT_OK){
-                final ImageView preview = (ImageView) findViewById(R.id.imageView);
-                Log.v("PhotoTest", "image exists");
-
-                (new AsyncTask<Void, Void, Void>(){
-                    @Override
-                    protected Void doInBackground(Void...voids){
-                        String filepath = file.getAbsolutePath();
-                        Bitmap myBitmap = BitmapFactory.decodeFile(filepath);
-
-                        int bHeight = preview.getWidth();
-                        int bWidth = preview.getHeight();
-
-                        MediaStore.Images.Media.insertImage(getContentResolver(), myBitmap, "PhotoTest", "taken with intent camera");
-                        MediaScannerConnection.scanFile(MainActivity.this, new String[]{filepath}, null, null);
-                        final Bitmap scaled = Bitmap.createScaledBitmap(myBitmap,bWidth,bHeight,false);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Matrix matrix = new Matrix();
-                                matrix.postRotate(90);
-                                Bitmap rotatedBitmap = Bitmap.createBitmap(scaled , 0, 0, scaled.getWidth(), scaled.getHeight(), matrix, true);
-
-
-                                preview.setImageBitmap(rotatedBitmap);
-                            }
-                        });
-                        return null;
-                    }
-                }).execute();
-            }
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
